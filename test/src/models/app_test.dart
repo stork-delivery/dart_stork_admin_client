@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:dart_stork_client/dart_stork_client.dart';
+import 'package:dart_stork_admin_client/dart_stork_admin_client.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -9,7 +9,6 @@ void main() {
         StorkApp(
           id: 1,
           name: 'test',
-          versions: const ['1.0.0'],
         ),
         isNotNull,
       );
@@ -25,7 +24,6 @@ void main() {
 
         expect(app.id, equals(1));
         expect(app.name, equals('test'));
-        expect(app.versions, equals(['1.0.0', '1.0.1']));
       });
 
       test('throws when id is not an int', () {

@@ -13,7 +13,7 @@ Dart package to access apps open APIs
 Install via `dart pub add`:
 
 ```sh
-dart pub add dart_stork_client
+dart pub add dart_stork_admin_client
 ```
 
 ---

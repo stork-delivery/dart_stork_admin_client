@@ -6,7 +6,6 @@ class StorkApp {
   const StorkApp({
     required this.id,
     required this.name,
-    required this.versions,
   });
 
   /// Creates a [StorkApp] from a JSON map.
@@ -14,7 +13,6 @@ class StorkApp {
     return StorkApp(
       id: json['id'] as int,
       name: json['name'] as String,
-      versions: (json['versions'] as List<dynamic>).cast<String>(),
     );
   }
 
@@ -23,7 +21,4 @@ class StorkApp {
 
   /// The app name.
   final String name;
-
-  /// List of available versions.
-  final List<String> versions;
 }
