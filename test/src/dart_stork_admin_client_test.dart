@@ -360,6 +360,213 @@ void main() {
       });
     });
 
+    group('listVersions', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('[]', 200),
+        );
+
+        await client.listVersions(1);
+
+        verify(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+
+      test('returns list of versions on success', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode([
+              {
+                'id': 1,
+                'appId': 1,
+                'version': '1.0.0',
+                'changelog': 'Initial release',
+              },
+              {
+                'id': 2,
+                'appId': 1,
+                'version': '1.0.1',
+                'changelog': 'Bug fixes',
+              },
+            ]),
+            200,
+          ),
+        );
+
+        final versions = await client.listVersions(1);
+
+        expect(versions.length, equals(2));
+        expect(versions[0].id, equals(1));
+        expect(versions[0].version, equals('1.0.0'));
+        expect(versions[0].changelog, equals('Initial release'));
+        expect(versions[1].id, equals(2));
+        expect(versions[1].version, equals('1.0.1'));
+        expect(versions[1].changelog, equals('Bug fixes'));
+      });
+
+      test('throws exception on error response', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('Not Found', 404),
+        );
+
+        expect(
+          () => client.listVersions(1),
+          throwsA(isA<Exception>()),
+        );
+      });
+
+      test('uses custom base url when provided', () async {
+        final customClient = DartStorkAdminClient(
+          baseUrl: 'https://custom.url',
+          client: httpClient,
+          apiKey: apiKey,
+        );
+
+        when(
+          () => httpClient.get(
+            Uri.parse('https://custom.url/v1/admin/apps/1/versions'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('[]', 200),
+        );
+
+        await customClient.listVersions(1);
+
+        verify(
+          () => httpClient.get(
+            Uri.parse('https://custom.url/v1/admin/apps/1/versions'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+    });
+
+    group('getVersion', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 2,
+              'appId': 1,
+              'version': '1.0.0',
+              'changelog': 'Initial release',
+            }),
+            200,
+          ),
+        );
+
+        await client.getVersion(1, 2);
+
+        verify(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+
+      test('returns version on success', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 2,
+              'appId': 1,
+              'version': '1.0.0',
+              'changelog': 'Initial release',
+            }),
+            200,
+          ),
+        );
+
+        final version = await client.getVersion(1, 2);
+
+        expect(version.id, equals(2));
+        expect(version.appId, equals(1));
+        expect(version.version, equals('1.0.0'));
+        expect(version.changelog, equals('Initial release'));
+      });
+
+      test('throws exception on error response', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('Not Found', 404),
+        );
+
+        expect(
+          () => client.getVersion(1, 2),
+          throwsA(isA<Exception>()),
+        );
+      });
+
+      test('uses custom base url when provided', () async {
+        final customClient = DartStorkAdminClient(
+          baseUrl: 'https://custom.url',
+          client: httpClient,
+          apiKey: apiKey,
+        );
+
+        when(
+          () => httpClient.get(
+            Uri.parse('https://custom.url/v1/admin/apps/1/versions/2'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 2,
+              'appId': 1,
+              'version': '1.0.0',
+              'changelog': 'Initial release',
+            }),
+            200,
+          ),
+        );
+
+        await customClient.getVersion(1, 2);
+
+        verify(
+          () => httpClient.get(
+            Uri.parse('https://custom.url/v1/admin/apps/1/versions/2'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+    });
+
     group('dispose', () {
       test('closes the http client', () {
         when(() => httpClient.close()).thenReturn(null);
