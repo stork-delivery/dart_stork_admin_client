@@ -51,10 +51,74 @@ class DartStorkAdminClient {
       throw Exception('Failed to list apps: ${response.statusCode}');
     }
 
-    final data = json.decode(response.body) as List<dynamic>;
-    return data
-        .map((json) => StorkApp.fromJson(json as Map<String, dynamic>))
-        .toList();
+    final body = json.decode(response.body) as List<dynamic>;
+    return body.cast<Map<String, dynamic>>().map(StorkApp.fromJson).toList();
+  }
+
+  /// Creates a new app.
+  Future<StorkApp> createApp({
+    required String name,
+    required bool publicMetadata,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('$_baseUrl/v1/admin/apps'),
+      headers: {
+        ..._headers,
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': name,
+        'publicMetadata': publicMetadata,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to create app: ${response.statusCode}');
+    }
+
+    return StorkApp.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Updates an existing app.
+  Future<StorkApp> updateApp({
+    required int id,
+    String? name,
+    bool? publicMetadata,
+  }) async {
+    final body = <String, dynamic>{};
+    if (name != null) body['name'] = name;
+    if (publicMetadata != null) body['publicMetadata'] = publicMetadata;
+
+    final response = await _client.patch(
+      Uri.parse('$_baseUrl/v1/admin/apps/$id'),
+      headers: {
+        ..._headers,
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(body),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update app: ${response.statusCode}');
+    }
+
+    return StorkApp.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Removes an app.
+  Future<void> removeApp(int id) async {
+    final response = await _client.delete(
+      Uri.parse('$_baseUrl/v1/admin/apps/$id'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to remove app: ${response.statusCode}');
+    }
   }
 
   /// Closes the client and cleans up resources.
