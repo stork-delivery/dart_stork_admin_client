@@ -2,4 +2,4 @@
 library;
 
 export 'app.dart';
-export 'version.dart';
+export 'stork_app_version.dart';

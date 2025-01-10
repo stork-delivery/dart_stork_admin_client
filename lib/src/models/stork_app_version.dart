@@ -1,18 +1,18 @@
-/// {@template version}
+/// {@template stork_app_version}
 /// A model representing a version of an app.
 /// {@endtemplate}
-class Version {
-  /// {@macro version}
-  const Version({
+class StorkAppVersion {
+  /// {@macro stork_app_version}
+  const StorkAppVersion({
     required this.id,
     required this.appId,
     required this.version,
     required this.changelog,
   });
 
-  /// Creates a [Version] from a json map.
-  factory Version.fromJson(Map<String, dynamic> json) {
-    return Version(
+  /// Creates a [StorkAppVersion] from a json map.
+  factory StorkAppVersion.fromJson(Map<String, dynamic> json) {
+    return StorkAppVersion(
       id: json['id'] as int,
       appId: json['appId'] as int,
       version: json['version'] as String,
@@ -44,13 +44,13 @@ class Version {
 
   /// Creates a copy of this version with the given fields replaced with new
   /// values.
-  Version copyWith({
+  StorkAppVersion copyWith({
     int? id,
     int? appId,
     String? version,
     String? changelog,
   }) {
-    return Version(
+    return StorkAppVersion(
       id: id ?? this.id,
       appId: appId ?? this.appId,
       version: version ?? this.version,

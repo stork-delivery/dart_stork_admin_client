@@ -2,9 +2,9 @@ import 'package:dart_stork_admin_client/src/models/models.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Version', () {
+  group('StorkAppVersion', () {
     test('can be instantiated', () {
-      const version = Version(
+      const version = StorkAppVersion(
         id: 1,
         appId: 2,
         version: '1.0.0',
@@ -25,7 +25,7 @@ void main() {
         'changelog': 'Initial release',
       };
 
-      final version = Version.fromJson(json);
+      final version = StorkAppVersion.fromJson(json);
 
       expect(version.id, equals(1));
       expect(version.appId, equals(2));
@@ -34,7 +34,7 @@ void main() {
     });
 
     test('toJson creates correct map', () {
-      const version = Version(
+      const version = StorkAppVersion(
         id: 1,
         appId: 2,
         version: '1.0.0',
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('copyWith returns new instance with updated values', () {
-      const version = Version(
+      const version = StorkAppVersion(
         id: 1,
         appId: 2,
         version: '1.0.0',
@@ -76,7 +76,7 @@ void main() {
     });
 
     test('copyWith returns new instance when no parameters are provided', () {
-      const version = Version(
+      const version = StorkAppVersion(
         id: 1,
         appId: 2,
         version: '1.0.0',
