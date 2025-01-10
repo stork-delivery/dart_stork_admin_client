@@ -6,6 +6,7 @@ class StorkApp {
   const StorkApp({
     required this.id,
     required this.name,
+    required this.publicMetadata,
   });
 
   /// Creates a [StorkApp] from a JSON map.
@@ -13,6 +14,7 @@ class StorkApp {
     return StorkApp(
       id: json['id'] as int,
       name: json['name'] as String,
+      publicMetadata: json['publicMetadata'] as bool,
     );
   }
 
@@ -21,4 +23,7 @@ class StorkApp {
 
   /// The app name.
   final String name;
+
+  /// Whether the app metadata is public.
+  final bool publicMetadata;
 }

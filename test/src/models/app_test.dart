@@ -9,6 +9,7 @@ void main() {
         StorkApp(
           id: 1,
           name: 'test',
+          publicMetadata: true,
         ),
         isNotNull,
       );
@@ -19,11 +20,12 @@ void main() {
         final app = StorkApp.fromJson({
           'id': 1,
           'name': 'test',
-          'versions': ['1.0.0', '1.0.1'],
+          'publicMetadata': true,
         });
 
         expect(app.id, equals(1));
         expect(app.name, equals('test'));
+        expect(app.publicMetadata, equals(true));
       });
 
       test('throws when id is not an int', () {
@@ -31,7 +33,7 @@ void main() {
           () => StorkApp.fromJson({
             'id': '1',
             'name': 'test',
-            'versions': ['1.0.0'],
+            'publicMetadata': true,
           }),
           throwsA(isA<TypeError>()),
         );
@@ -42,7 +44,18 @@ void main() {
           () => StorkApp.fromJson({
             'id': 1,
             'name': 1,
-            'versions': ['1.0.0'],
+            'publicMetadata': true,
+          }),
+          throwsA(isA<TypeError>()),
+        );
+      });
+
+      test('throws when publicMetadata is not a bool', () {
+        expect(
+          () => StorkApp.fromJson({
+            'id': 1,
+            'name': 'test',
+            'publicMetadata': 'true',
           }),
           throwsA(isA<TypeError>()),
         );

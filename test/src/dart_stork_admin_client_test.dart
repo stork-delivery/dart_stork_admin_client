@@ -46,7 +46,7 @@ void main() {
             json.encode({
               'id': 1,
               'name': 'Test App',
-              'versions': ['1.0.0'],
+              'publicMetadata': true,
             }),
             200,
           ),
@@ -97,7 +97,7 @@ void main() {
             json.encode({
               'id': 1,
               'name': 'Test App',
-              'versions': ['1.0.0'],
+              'publicMetadata': true,
             }),
             200,
           ),
@@ -147,12 +147,12 @@ void main() {
               {
                 'id': 1,
                 'name': 'Test App 1',
-                'versions': ['1.0.0'],
+                'publicMetadata': true,
               },
               {
                 'id': 2,
                 'name': 'Test App 2',
-                'versions': ['1.0.0'],
+                'publicMetadata': false,
               },
             ]),
             200,
