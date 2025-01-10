@@ -16,7 +16,7 @@ void main() {
 
     setUpAll(() {
       registerFallbackValue(
-          Uri.parse('https://stork.erickzanardoo.workers.dev'));
+          Uri.parse('https://stork.erickzanardoo.workers.dev'),);
     });
 
     setUp(() {
@@ -36,7 +36,7 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-                'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1'),
+                'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1',),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -55,7 +55,7 @@ void main() {
         verify(
           () => httpClient.get(
             Uri.parse(
-                'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1'),
+                'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1',),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
@@ -65,7 +65,7 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-                'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1'),
+                'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1',),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer((_) async => http.Response('Not Found', 404));
