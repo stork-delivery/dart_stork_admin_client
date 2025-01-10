@@ -13,10 +13,11 @@ void main() {
     late http.Client httpClient;
     late DartStorkAdminClient client;
     const apiKey = 'test-api-key';
+    const baseUrl = 'https://stork.erickzanardoo.workers.dev';
 
     setUpAll(() {
       registerFallbackValue(
-        Uri.parse('https://stork.erickzanardoo.workers.dev'),
+        Uri.parse(baseUrl),
       );
     });
 
@@ -36,9 +37,7 @@ void main() {
       test('makes correct http request', () async {
         when(
           () => httpClient.get(
-            Uri.parse(
-              'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1',
-            ),
+            Uri.parse('$baseUrl/v1/admin/apps/1'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -56,9 +55,7 @@ void main() {
 
         verify(
           () => httpClient.get(
-            Uri.parse(
-              'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1',
-            ),
+            Uri.parse('$baseUrl/v1/admin/apps/1'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
@@ -67,9 +64,7 @@ void main() {
       test('throws exception on non-200 response', () async {
         when(
           () => httpClient.get(
-            Uri.parse(
-              'https://stork.erickzanardoo.workers.dev/v1/admin/apps/1',
-            ),
+            Uri.parse('$baseUrl/v1/admin/apps/1'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer((_) async => http.Response('Not Found', 404));
@@ -118,7 +113,7 @@ void main() {
       test('makes correct http request', () async {
         when(
           () => httpClient.get(
-            Uri.parse('https://stork.erickzanardoo.workers.dev/v1/admin/apps'),
+            Uri.parse('$baseUrl/v1/admin/apps'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -129,7 +124,7 @@ void main() {
 
         verify(
           () => httpClient.get(
-            Uri.parse('https://stork.erickzanardoo.workers.dev/v1/admin/apps'),
+            Uri.parse('$baseUrl/v1/admin/apps'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
@@ -138,7 +133,7 @@ void main() {
       test('returns list of apps on success', () async {
         when(
           () => httpClient.get(
-            Uri.parse('https://stork.erickzanardoo.workers.dev/v1/admin/apps'),
+            Uri.parse('$baseUrl/v1/admin/apps'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -171,7 +166,7 @@ void main() {
       test('throws exception on error response', () async {
         when(
           () => httpClient.get(
-            Uri.parse('https://stork.erickzanardoo.workers.dev/v1/admin/apps'),
+            Uri.parse('$baseUrl/v1/admin/apps'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -208,6 +203,160 @@ void main() {
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
+      });
+    });
+
+    group('createApp', () {
+      test('creates an app successfully', () async {
+        when(
+          () => httpClient.post(
+            Uri.parse('$baseUrl/v1/admin/apps'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'name': 'New App',
+              'publicMetadata': true,
+            }),
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 1,
+              'name': 'New App',
+              'publicMetadata': true,
+            }),
+            201,
+          ),
+        );
+
+        final app = await client.createApp(
+          name: 'New App',
+          publicMetadata: true,
+        );
+
+        expect(app.id, equals(1));
+        expect(app.name, equals('New App'));
+        expect(app.publicMetadata, isTrue);
+      });
+
+      test('throws on non-201 response', () {
+        when(
+          () => httpClient.post(
+            Uri.parse('$baseUrl/v1/admin/apps'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'name': 'New App',
+              'publicMetadata': true,
+            }),
+          ),
+        ).thenAnswer((_) async => http.Response('', 400));
+
+        expect(
+          () => client.createApp(
+            name: 'New App',
+            publicMetadata: true,
+          ),
+          throwsException,
+        );
+      });
+    });
+
+    group('updateApp', () {
+      test('updates an app successfully', () async {
+        when(
+          () => httpClient.patch(
+            Uri.parse('$baseUrl/v1/admin/apps/1'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'name': 'Updated App',
+              'publicMetadata': false,
+            }),
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 1,
+              'name': 'Updated App',
+              'publicMetadata': false,
+            }),
+            200,
+          ),
+        );
+
+        final app = await client.updateApp(
+          id: 1,
+          name: 'Updated App',
+          publicMetadata: false,
+        );
+
+        expect(app.id, equals(1));
+        expect(app.name, equals('Updated App'));
+        expect(app.publicMetadata, isFalse);
+      });
+
+      test('throws on non-200 response', () {
+        when(
+          () => httpClient.patch(
+            Uri.parse('$baseUrl/v1/admin/apps/1'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'name': 'Updated App',
+            }),
+          ),
+        ).thenAnswer((_) async => http.Response('', 400));
+
+        expect(
+          () => client.updateApp(
+            id: 1,
+            name: 'Updated App',
+          ),
+          throwsException,
+        );
+      });
+    });
+
+    group('removeApp', () {
+      test('removes an app successfully', () async {
+        when(
+          () => httpClient.delete(
+            Uri.parse('$baseUrl/v1/admin/apps/1'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+            },
+          ),
+        ).thenAnswer((_) async => http.Response('', 204));
+
+        await expectLater(
+          client.removeApp(1),
+          completes,
+        );
+      });
+
+      test('throws on non-204 response', () {
+        when(
+          () => httpClient.delete(
+            Uri.parse('$baseUrl/v1/admin/apps/1'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+            },
+          ),
+        ).thenAnswer((_) async => http.Response('', 400));
+
+        expect(
+          () => client.removeApp(1),
+          throwsException,
+        );
       });
     });
 
