@@ -121,6 +121,37 @@ class DartStorkAdminClient {
     }
   }
 
+  /// Lists all versions for a specific app.
+  Future<List<Version>> listVersions(int appId) async {
+    final response = await _client.get(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/versions'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to list versions: ${response.statusCode}');
+    }
+
+    final body = json.decode(response.body) as List<dynamic>;
+    return body.cast<Map<String, dynamic>>().map(Version.fromJson).toList();
+  }
+
+  /// Gets a specific version of an app.
+  Future<Version> getVersion(int appId, int versionId) async {
+    final response = await _client.get(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/versions/$versionId'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch version: ${response.statusCode}');
+    }
+
+    return Version.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
   /// Closes the client and cleans up resources.
   void dispose() => _client.close();
 }

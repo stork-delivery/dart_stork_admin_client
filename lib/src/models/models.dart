@@ -2,3 +2,4 @@
 library;
 
 export 'app.dart';
+export 'version.dart';
