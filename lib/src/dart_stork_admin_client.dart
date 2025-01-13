@@ -155,6 +155,27 @@ class DartStorkAdminClient {
     );
   }
 
+  /// Gets all artifacts for a specific version.
+  Future<List<StorkAppVersionArtifact>> getArtifacts(
+    int appId,
+    int versionId,
+  ) async {
+    final response = await _client.get(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/versions/$versionId/artifacts'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch artifacts: ${response.statusCode}');
+    }
+
+    final body = json.decode(response.body) as List<dynamic>;
+    return body
+        .cast<Map<String, dynamic>>()
+        .map(StorkAppVersionArtifact.fromJson)
+        .toList();
+  }
+
   /// Closes the client and cleans up resources.
   void dispose() => _client.close();
 }

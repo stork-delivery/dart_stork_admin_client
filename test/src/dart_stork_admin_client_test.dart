@@ -567,6 +567,111 @@ void main() {
       });
     });
 
+    group('getArtifacts', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('[]', 200),
+        );
+
+        await client.getArtifacts(1, 2);
+
+        verify(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+
+      test('returns list of artifacts on success', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode([
+              {
+                'id': 1,
+                'versionId': 2,
+                'name': 'app-release.apk',
+                'platform': 'android',
+              },
+              {
+                'id': 2,
+                'versionId': 2,
+                'name': 'app.ipa',
+                'platform': 'ios',
+              },
+            ]),
+            200,
+          ),
+        );
+
+        final artifacts = await client.getArtifacts(1, 2);
+
+        expect(artifacts.length, equals(2));
+        expect(artifacts[0].id, equals(1));
+        expect(artifacts[0].versionId, equals(2));
+        expect(artifacts[0].name, equals('app-release.apk'));
+        expect(artifacts[0].platform, equals('android'));
+        expect(artifacts[1].id, equals(2));
+        expect(artifacts[1].versionId, equals(2));
+        expect(artifacts[1].name, equals('app.ipa'));
+        expect(artifacts[1].platform, equals('ios'));
+      });
+
+      test('throws exception on error response', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('Not Found', 404),
+        );
+
+        expect(
+          () => client.getArtifacts(1, 2),
+          throwsA(isA<Exception>()),
+        );
+      });
+
+      test('uses custom base url when provided', () async {
+        final customClient = DartStorkAdminClient(
+          baseUrl: 'https://custom.url',
+          client: httpClient,
+          apiKey: apiKey,
+        );
+
+        when(
+          () => httpClient.get(
+            Uri.parse(
+                'https://custom.url/v1/admin/apps/1/versions/2/artifacts',),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('[]', 200),
+        );
+
+        await customClient.getArtifacts(1, 2);
+
+        verify(
+          () => httpClient.get(
+            Uri.parse(
+                'https://custom.url/v1/admin/apps/1/versions/2/artifacts',),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+    });
+
     group('dispose', () {
       test('closes the http client', () {
         when(() => httpClient.close()).thenReturn(null);
