@@ -674,6 +674,100 @@ void main() {
       });
     });
 
+    group('downloadArtifact', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('binary-data', 200),
+        );
+
+        await client.downloadArtifact(1, '1.0.0', 'android');
+
+        verify(
+          () => httpClient.get(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+
+      test('returns binary data on success', () async {
+        final binaryData = [1, 2, 3, 4, 5];
+        when(
+          () => httpClient.get(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response.bytes(
+            binaryData,
+            200,
+          ),
+        );
+
+        final result = await client.downloadArtifact(1, '1.0.0', 'android');
+        expect(result, equals(binaryData));
+      });
+
+      test('throws exception on error response', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('Not Found', 404),
+        );
+
+        expect(
+          () => client.downloadArtifact(1, '1.0.0', 'android'),
+          throwsA(isA<Exception>()),
+        );
+      });
+
+      test('uses custom base url when provided', () async {
+        final customClient = DartStorkAdminClient(
+          baseUrl: 'https://custom.url',
+          client: httpClient,
+          apiKey: apiKey,
+        );
+
+        when(
+          () => httpClient.get(
+            Uri.parse(
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('binary-data', 200),
+        );
+
+        await customClient.downloadArtifact(1, '1.0.0', 'android');
+
+        verify(
+          () => httpClient.get(
+            Uri.parse(
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+    });
+
     group('dispose', () {
       test('closes the http client', () {
         when(() => httpClient.close()).thenReturn(null);

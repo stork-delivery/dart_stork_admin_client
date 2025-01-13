@@ -178,6 +178,26 @@ class DartStorkAdminClient {
         .toList();
   }
 
+  /// Downloads a single artifact for a specific version and platform.
+  Future<List<int>> downloadArtifact(
+    int appId,
+    String versionName,
+    String platform,
+  ) async {
+    final response = await _client.get(
+      Uri.parse(
+        '$_baseUrl/v1/admin/apps/$appId/versions/$versionName/artifacts/$platform/download',
+      ),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to download artifact: ${response.statusCode}');
+    }
+
+    return response.bodyBytes;
+  }
+
   /// Closes the client and cleans up resources.
   void dispose() => _client.close();
 }
