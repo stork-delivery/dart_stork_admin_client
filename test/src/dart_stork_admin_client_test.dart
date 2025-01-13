@@ -653,7 +653,8 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-                'https://custom.url/v1/admin/apps/1/versions/2/artifacts',),
+              'https://custom.url/v1/admin/apps/1/versions/2/artifacts',
+            ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -665,7 +666,8 @@ void main() {
         verify(
           () => httpClient.get(
             Uri.parse(
-                'https://custom.url/v1/admin/apps/1/versions/2/artifacts',),
+              'https://custom.url/v1/admin/apps/1/versions/2/artifacts',
+            ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
