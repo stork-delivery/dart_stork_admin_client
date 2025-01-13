@@ -679,7 +679,7 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/download',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
@@ -692,7 +692,7 @@ void main() {
         verify(
           () => httpClient.get(
             Uri.parse(
-              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/download',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
@@ -704,7 +704,7 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/download',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
@@ -723,7 +723,7 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/download',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
@@ -747,7 +747,7 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/download',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
@@ -760,7 +760,7 @@ void main() {
         verify(
           () => httpClient.get(
             Uri.parse(
-              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/android/download',
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/download',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),

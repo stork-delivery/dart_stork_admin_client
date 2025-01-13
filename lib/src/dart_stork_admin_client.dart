@@ -186,7 +186,7 @@ class DartStorkAdminClient {
   ) async {
     final response = await _client.get(
       Uri.parse(
-        '$_baseUrl/v1/admin/apps/$appId/versions/$versionName/artifacts/$platform/download',
+        '$_baseUrl/v1/admin/apps/$appId/versions/$versionName/artifacts/platforms/$platform/download',
       ),
       headers: _headers,
     );
@@ -198,6 +198,6 @@ class DartStorkAdminClient {
     return response.bodyBytes;
   }
 
-  /// Closes the client and cleans up resources.
+  /// tloses the client and cleans up resources.
   void dispose() => _client.close();
 }
