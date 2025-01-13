@@ -567,7 +567,7 @@ void main() {
       });
     });
 
-    group('getArtifacts', () {
+    group('listArtifacts', () {
       test('makes correct http request', () async {
         when(
           () => httpClient.get(
@@ -578,7 +578,7 @@ void main() {
           (_) async => http.Response('[]', 200),
         );
 
-        await client.getArtifacts(1, 2);
+        await client.listArtifacts(1, 2);
 
         verify(
           () => httpClient.get(
@@ -614,7 +614,7 @@ void main() {
           ),
         );
 
-        final artifacts = await client.getArtifacts(1, 2);
+        final artifacts = await client.listArtifacts(1, 2);
 
         expect(artifacts.length, equals(2));
         expect(artifacts[0].id, equals(1));
@@ -638,7 +638,7 @@ void main() {
         );
 
         expect(
-          () => client.getArtifacts(1, 2),
+          () => client.listArtifacts(1, 2),
           throwsA(isA<Exception>()),
         );
       });
@@ -661,7 +661,7 @@ void main() {
           (_) async => http.Response('[]', 200),
         );
 
-        await customClient.getArtifacts(1, 2);
+        await customClient.listArtifacts(1, 2);
 
         verify(
           () => httpClient.get(

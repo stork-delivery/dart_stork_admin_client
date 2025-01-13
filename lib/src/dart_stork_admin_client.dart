@@ -155,8 +155,8 @@ class DartStorkAdminClient {
     );
   }
 
-  /// Gets all artifacts for a specific version.
-  Future<List<StorkAppVersionArtifact>> getArtifacts(
+  /// Lists all artifacts for a specific version.
+  Future<List<StorkAppVersionArtifact>> listArtifacts(
     int appId,
     int versionId,
   ) async {
