@@ -140,9 +140,9 @@ class DartStorkAdminClient {
   }
 
   /// Gets a specific version of an app.
-  Future<StorkAppVersion> getVersion(int appId, int versionId) async {
+  Future<StorkAppVersion> getVersion(int appId, String versionName) async {
     final response = await _client.get(
-      Uri.parse('$_baseUrl/v1/admin/apps/$appId/versions/$versionId'),
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/versions/$versionName'),
       headers: _headers,
     );
 
@@ -158,10 +158,12 @@ class DartStorkAdminClient {
   /// Lists all artifacts for a specific version.
   Future<List<StorkAppVersionArtifact>> listArtifacts(
     int appId,
-    int versionId,
+    String versionName,
   ) async {
     final response = await _client.get(
-      Uri.parse('$_baseUrl/v1/admin/apps/$appId/versions/$versionId/artifacts'),
+      Uri.parse(
+        '$_baseUrl/v1/admin/apps/$appId/versions/$versionName/artifacts',
+      ),
       headers: _headers,
     );
 

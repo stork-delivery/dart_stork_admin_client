@@ -465,7 +465,7 @@ void main() {
       test('makes correct http request', () async {
         when(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -480,11 +480,11 @@ void main() {
           ),
         );
 
-        await client.getVersion(1, 2);
+        await client.getVersion(1, '1.0.0');
 
         verify(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
@@ -493,7 +493,7 @@ void main() {
       test('returns version on success', () async {
         when(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -508,7 +508,7 @@ void main() {
           ),
         );
 
-        final version = await client.getVersion(1, 2);
+        final version = await client.getVersion(1, '1.0.0');
 
         expect(version.id, equals(2));
         expect(version.appId, equals(1));
@@ -519,7 +519,7 @@ void main() {
       test('throws exception on error response', () async {
         when(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -527,7 +527,7 @@ void main() {
         );
 
         expect(
-          () => client.getVersion(1, 2),
+          () => client.getVersion(1, '1.0.0'),
           throwsA(isA<Exception>()),
         );
       });
@@ -541,7 +541,7 @@ void main() {
 
         when(
           () => httpClient.get(
-            Uri.parse('https://custom.url/v1/admin/apps/1/versions/2'),
+            Uri.parse('https://custom.url/v1/admin/apps/1/versions/1.0.0'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -556,11 +556,11 @@ void main() {
           ),
         );
 
-        await customClient.getVersion(1, 2);
+        await customClient.getVersion(1, '1.0.0');
 
         verify(
           () => httpClient.get(
-            Uri.parse('https://custom.url/v1/admin/apps/1/versions/2'),
+            Uri.parse('https://custom.url/v1/admin/apps/1/versions/1.0.0'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
@@ -571,18 +571,18 @@ void main() {
       test('makes correct http request', () async {
         when(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
           (_) async => http.Response('[]', 200),
         );
 
-        await client.listArtifacts(1, 2);
+        await client.listArtifacts(1, '1.0.0');
 
         verify(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).called(1);
@@ -591,7 +591,7 @@ void main() {
       test('returns list of artifacts on success', () async {
         when(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -614,7 +614,7 @@ void main() {
           ),
         );
 
-        final artifacts = await client.listArtifacts(1, 2);
+        final artifacts = await client.listArtifacts(1, '1.0.0');
 
         expect(artifacts.length, equals(2));
         expect(artifacts[0].id, equals(1));
@@ -630,7 +630,7 @@ void main() {
       test('throws exception on error response', () async {
         when(
           () => httpClient.get(
-            Uri.parse('$baseUrl/v1/admin/apps/1/versions/2/artifacts'),
+            Uri.parse('$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts'),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
         ).thenAnswer(
@@ -638,7 +638,7 @@ void main() {
         );
 
         expect(
-          () => client.listArtifacts(1, 2),
+          () => client.listArtifacts(1, '1.0.0'),
           throwsA(isA<Exception>()),
         );
       });
@@ -653,7 +653,7 @@ void main() {
         when(
           () => httpClient.get(
             Uri.parse(
-              'https://custom.url/v1/admin/apps/1/versions/2/artifacts',
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
@@ -661,12 +661,12 @@ void main() {
           (_) async => http.Response('[]', 200),
         );
 
-        await customClient.listArtifacts(1, 2);
+        await customClient.listArtifacts(1, '1.0.0');
 
         verify(
           () => httpClient.get(
             Uri.parse(
-              'https://custom.url/v1/admin/apps/1/versions/2/artifacts',
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts',
             ),
             headers: {'Authorization': 'Bearer $apiKey'},
           ),
