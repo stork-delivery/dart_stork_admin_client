@@ -16,15 +16,73 @@ Install via `dart pub add`:
 dart pub add dart_stork_admin_client
 ```
 
+## Usage 🚀
+
+To use the Dart Stork Admin Client, first create an instance with your API key:
+
+```dart
+final client = DartStorkAdminClient(apiKey: 'your-api-key');
+```
+
+### Managing apps
+```dart
+
+// List all apps
+final apps = await client.listApps();
+
+// Get a specific app
+final app = await client.getApp(1);
+
+// Create a new app
+final newApp = await client.createApp(
+  name: 'My App',
+  publicMetadata: true,
+);
+
+// Update an app
+final updatedApp = await client.updateApp(
+  id: 1,
+  name: 'Updated App Name',
+  publicMetadata: false,
+);
+
+// Remove an app
+await client.removeApp(1);
+```
+
+### Managing versions
+
+```dart
+// List all versions for an app
+final versions = await client.listVersions(1);
+
+// Get a specific version
+final version = await client.getVersion(1, '1.0.0');
+```
+
+### Managing artifacts
+
+```dart
+// List artifacts for a version
+final artifacts = await client.listArtifacts(1, '1.0.0');
+
+// Download an artifact
+final bytes = await client.downloadArtifact(1, '1.0.0', 'android');
+```
+
+### Custom Base URL
+
+When using a custom deployed API, you can set the base URL using the `baseUrl` constructor parameter:
+
+```dart
+final client = DartStorkAdminClient(
+  apiKey: 'your-api-key',
+  baseUrl: 'https://your-api-url.com',
+);
+```
+
 ---
 
-## Continuous Integration 🤖
-
-Dart Stork Client comes with a built-in [GitHub Actions workflow][github_actions_link] powered by [Very Good Workflows][very_good_workflows_link] but you can also add your preferred CI/CD solution.
-
-Out of the box, on each pull request and push, the CI `formats`, `lints`, and `tests` the code. This ensures the code remains consistent and behaves correctly as you add functionality or make changes. The project uses [Very Good Analysis][very_good_analysis_link] for a strict set of analysis options used by our team. Code coverage is enforced using the [Very Good Workflows][very_good_coverage_link].
-
----
 
 ## Running Tests 🧪
 
