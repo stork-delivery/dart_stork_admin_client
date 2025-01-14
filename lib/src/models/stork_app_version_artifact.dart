@@ -8,6 +8,7 @@ class StorkAppVersionArtifact {
     required this.versionId,
     required this.name,
     required this.platform,
+    this.fileName,
   });
 
   /// Creates a [StorkAppVersionArtifact] from a json map.
@@ -17,6 +18,7 @@ class StorkAppVersionArtifact {
       versionId: json['versionId'] as int,
       name: json['name'] as String,
       platform: json['platform'] as String,
+      fileName: json['fileName'] as String?,
     );
   }
 
@@ -32,6 +34,9 @@ class StorkAppVersionArtifact {
   /// The platform of the artifact.
   final String platform;
 
+  /// The file name of the artifact.
+  final String? fileName;
+
   /// Converts the artifact to a json map.
   Map<String, dynamic> toJson() {
     return {
@@ -39,6 +44,7 @@ class StorkAppVersionArtifact {
       'versionId': versionId,
       'name': name,
       'platform': platform,
+      if (fileName != null) 'fileName': fileName,
     };
   }
 
@@ -49,12 +55,14 @@ class StorkAppVersionArtifact {
     int? versionId,
     String? name,
     String? platform,
+    String? fileName,
   }) {
     return StorkAppVersionArtifact(
       id: id ?? this.id,
       versionId: versionId ?? this.versionId,
       name: name ?? this.name,
       platform: platform ?? this.platform,
+      fileName: fileName ?? this.fileName,
     );
   }
 }
