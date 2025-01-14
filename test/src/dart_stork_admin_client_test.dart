@@ -395,12 +395,14 @@ void main() {
                 'appId': 1,
                 'version': '1.0.0',
                 'changelog': 'Initial release',
+                'createdAt': '2025-01-14 10:01:17',
               },
               {
                 'id': 2,
                 'appId': 1,
                 'version': '1.0.1',
                 'changelog': 'Bug fixes',
+                'createdAt': '2025-01-14 10:01:17',
               },
             ]),
             200,
@@ -413,9 +415,11 @@ void main() {
         expect(versions[0].id, equals(1));
         expect(versions[0].version, equals('1.0.0'));
         expect(versions[0].changelog, equals('Initial release'));
+        expect(versions[0].createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
         expect(versions[1].id, equals(2));
         expect(versions[1].version, equals('1.0.1'));
         expect(versions[1].changelog, equals('Bug fixes'));
+        expect(versions[1].createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
       });
 
       test('throws exception on error response', () async {
@@ -475,6 +479,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
+              'createdAt': '2025-01-14 10:01:17',
             }),
             200,
           ),
@@ -503,6 +508,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
+              'createdAt': '2025-01-14 10:01:17',
             }),
             200,
           ),
@@ -514,6 +520,7 @@ void main() {
         expect(version.appId, equals(1));
         expect(version.version, equals('1.0.0'));
         expect(version.changelog, equals('Initial release'));
+        expect(version.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
       });
 
       test('throws exception on error response', () async {
@@ -551,6 +558,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
+              'createdAt': '2025-01-14 10:01:17',
             }),
             200,
           ),
