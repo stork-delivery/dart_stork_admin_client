@@ -776,6 +776,132 @@ void main() {
       });
     });
 
+    group('getItchIOData', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/itchio'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 1,
+              'appId': 1,
+              'buttlerKey': 'test-key',
+              'itchIOUsername': 'test-user',
+              'itchIOGameName': 'test-game',
+            }),
+            200,
+          ),
+        );
+
+        final data = await client.getItchIOData(1);
+
+        expect(data?.id, equals(1));
+        expect(data?.appId, equals(1));
+        expect(data?.buttlerKey, equals('test-key'));
+        expect(data?.itchIOUsername, equals('test-user'));
+        expect(data?.itchIOGameName, equals('test-game'));
+      });
+
+      test('returns null on 404', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/itchio'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer((_) async => http.Response('', 404));
+
+        final data = await client.getItchIOData(1);
+        expect(data, isNull);
+      });
+
+      test('throws on non 200/404 response', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/itchio'),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer((_) async => http.Response('', 500));
+
+        expect(
+          () => client.getItchIOData(1),
+          throwsA(isA<Exception>()),
+        );
+      });
+    });
+
+    group('updateItchIOData', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.put(
+            Uri.parse('$baseUrl/v1/admin/apps/1/itchio'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'buttlerKey': 'test-key',
+              'itchIOUsername': 'test-user',
+              'itchIOGameName': 'test-game',
+            }),
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 1,
+              'appId': 1,
+              'buttlerKey': 'test-key',
+              'itchIOUsername': 'test-user',
+              'itchIOGameName': 'test-game',
+            }),
+            200,
+          ),
+        );
+
+        final data = await client.updateItchIOData(
+          appId: 1,
+          buttlerKey: 'test-key',
+          itchIOUsername: 'test-user',
+          itchIOGameName: 'test-game',
+        );
+
+        expect(data.id, equals(1));
+        expect(data.appId, equals(1));
+        expect(data.buttlerKey, equals('test-key'));
+        expect(data.itchIOUsername, equals('test-user'));
+        expect(data.itchIOGameName, equals('test-game'));
+      });
+
+      test('throws on non 200 response', () async {
+        when(
+          () => httpClient.put(
+            Uri.parse('$baseUrl/v1/admin/apps/1/itchio'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'buttlerKey': 'test-key',
+              'itchIOUsername': 'test-user',
+              'itchIOGameName': 'test-game',
+            }),
+          ),
+        ).thenAnswer((_) async => http.Response('', 500));
+
+        expect(
+          () => client.updateItchIOData(
+            appId: 1,
+            buttlerKey: 'test-key',
+            itchIOUsername: 'test-user',
+            itchIOGameName: 'test-game',
+          ),
+          throwsA(isA<Exception>()),
+        );
+      });
+    });
+
     group('dispose', () {
       test('closes the http client', () {
         when(() => httpClient.close()).thenReturn(null);

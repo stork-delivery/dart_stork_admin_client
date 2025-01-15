@@ -198,6 +198,55 @@ class DartStorkAdminClient {
     return response.bodyBytes;
   }
 
-  /// tloses the client and cleans up resources.
+  /// Gets the Itch.io integration data for a specific app.
+  Future<StorkItchIOData?> getItchIOData(int appId) async {
+    final response = await _client.get(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/itchio'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 404) {
+      return null;
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch Itch.io data: ${response.statusCode}');
+    }
+
+    return StorkItchIOData.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Updates the Itch.io integration data for a specific app.
+  Future<StorkItchIOData> updateItchIOData({
+    required int appId,
+    required String buttlerKey,
+    required String itchIOUsername,
+    required String itchIOGameName,
+  }) async {
+    final response = await _client.put(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/itchio'),
+      headers: {
+        ..._headers,
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'buttlerKey': buttlerKey,
+        'itchIOUsername': itchIOUsername,
+        'itchIOGameName': itchIOGameName,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update Itch.io data: ${response.statusCode}');
+    }
+
+    return StorkItchIOData.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Closes the client and cleans up resources.
   void dispose() => _client.close();
 }
