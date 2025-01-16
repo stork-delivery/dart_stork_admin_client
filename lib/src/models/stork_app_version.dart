@@ -13,24 +13,31 @@ class StorkAppVersion {
 
   /// Creates a [StorkAppVersion] from a json map.
   factory StorkAppVersion.fromJson(Map<String, dynamic> json) {
-    final createdAtStr = json['createdAt'] as String;
-    final parts = createdAtStr.split(' ');
-    final dateParts = parts[0].split('-');
-    final timeParts = parts[1].split(':');
+    DateTime createdAt;
+    try {
+      final createdAtStr = json['createdAt'] as String;
+      final parts = createdAtStr.split(' ');
+      final dateParts = parts[0].split('-');
+      final timeParts = parts[1].split(':');
 
-    return StorkAppVersion(
-      id: json['id'] as int,
-      appId: json['appId'] as int,
-      version: json['version'] as String,
-      changelog: json['changelog'] as String,
-      createdAt: DateTime(
+      createdAt = DateTime(
         int.parse(dateParts[0]), // year
         int.parse(dateParts[1]), // month
         int.parse(dateParts[2]), // day
         int.parse(timeParts[0]), // hour
         int.parse(timeParts[1]), // minute
         int.parse(timeParts[2]), // second
-      ),
+      );
+    } catch (_) {
+      createdAt = DateTime.fromMillisecondsSinceEpoch(0);
+    }
+
+    return StorkAppVersion(
+      id: json['id'] as int,
+      appId: json['appId'] as int,
+      version: json['version'] as String,
+      changelog: json['changelog'] as String,
+      createdAt: createdAt,
     );
   }
 

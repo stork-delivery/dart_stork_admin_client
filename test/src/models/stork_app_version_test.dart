@@ -41,6 +41,25 @@ void main() {
       expect(version.createdAt, equals(testDateTime));
     });
 
+    test('fromJson returns epoch time when date parsing fails', () {
+      final json = {
+        'id': 1,
+        'appId': 2,
+        'version': '1.0.0',
+        'changelog': 'Initial release',
+        'createdAt': 'invalid-date',
+      };
+
+      final version = StorkAppVersion.fromJson(json);
+      final epochTime = DateTime.fromMillisecondsSinceEpoch(0);
+
+      expect(version.id, equals(1));
+      expect(version.appId, equals(2));
+      expect(version.version, equals('1.0.0'));
+      expect(version.changelog, equals('Initial release'));
+      expect(version.createdAt, equals(epochTime));
+    });
+
     test('toJson creates correct map', () {
       final version = StorkAppVersion(
         id: 1,
