@@ -255,7 +255,8 @@ class DartStorkAdminClient {
   }) async {
     final response = await _client.get(
       Uri.parse(
-          '$_baseUrl/v1/admin/apps/$appId/news?page=$page&perPage=$perPage'),
+        '$_baseUrl/v1/admin/apps/$appId/news?page=$page&perPage=$perPage',
+      ),
       headers: _headers,
     );
 
