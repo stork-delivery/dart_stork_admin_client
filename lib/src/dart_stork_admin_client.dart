@@ -247,6 +247,101 @@ class DartStorkAdminClient {
     );
   }
 
+  /// Lists all news, paginated, from an app
+  Future<List<StorkAppNews>> listNews({
+    required int appId,
+    required int page,
+    required int perPage,
+  }) async {
+    final response = await _client.get(
+      Uri.parse(
+          '$_baseUrl/v1/admin/apps/$appId/news?page=$page&perPage=$perPage'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to list news: ${response.statusCode}');
+    }
+
+    return (json.decode(response.body) as List)
+        .map((e) => StorkAppNews.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  /// Get a single news from an app
+  Future<StorkAppNews> getNews({
+    required int appId,
+    required int newsId,
+  }) async {
+    final response = await _client.get(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/news/$newsId'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to get news: ${response.statusCode}');
+    }
+
+    return StorkAppNews.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Creates a new news
+  Future<StorkAppNews> createNews({
+    required int appId,
+    required String title,
+    required String content,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/news'),
+      headers: {
+        ..._headers,
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'title': title,
+        'content': content,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create news: ${response.statusCode}');
+    }
+
+    return StorkAppNews.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
+  /// Updates an existing news
+  Future<StorkAppNews> updateNews({
+    required int appId,
+    required int newsId,
+    required String title,
+    required String content,
+  }) async {
+    final response = await _client.put(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/news/$newsId'),
+      headers: {
+        ..._headers,
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'title': title,
+        'content': content,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update news: ${response.statusCode}');
+    }
+
+    return StorkAppNews.fromJson(
+      json.decode(response.body) as Map<String, dynamic>,
+    );
+  }
+
   /// Closes the client and cleans up resources.
   void dispose() => _client.close();
 }

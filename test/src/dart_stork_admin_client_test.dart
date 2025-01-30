@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 import 'dart:convert';
 
 import 'package:dart_stork_admin_client/dart_stork_admin_client.dart';
@@ -899,6 +899,141 @@ void main() {
           ),
           throwsA(isA<Exception>()),
         );
+      });
+    });
+
+    group('news', () {
+      test('list news', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/news?page=1&perPage=10'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+            },
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode([
+              {
+                'id': 1,
+                'title': 'Test title',
+                'content': 'Test content',
+                'createdAt': '2025-01-14 10:01:17',
+              },
+            ]),
+            200,
+          ),
+        );
+
+        final news = await client.listNews(appId: 1, page: 1, perPage: 10);
+
+        expect(news[0].id, equals(1));
+        expect(news[0].title, equals('Test title'));
+        expect(news[0].content, equals('Test content'));
+        expect(news[0].createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17, 0)));
+      });
+
+      test('get news', () async {
+        when(
+          () => httpClient.get(
+            Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+            },
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 1,
+              'title': 'Test title',
+              'content': 'Test content',
+              'createdAt': '2025-01-14 10:01:17',
+            }),
+            200,
+          ),
+        );
+
+        final news = await client.getNews(appId: 1, newsId: 1);
+
+        expect(news.id, equals(1));
+        expect(news.title, equals('Test title'));
+        expect(news.content, equals('Test content'));
+        expect(news.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17, 0)));
+      });
+
+      test('create news', () async {
+        when(
+          () => httpClient.post(
+            Uri.parse('$baseUrl/v1/admin/apps/1/news'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'title': 'Test title',
+              'content': 'Test content',
+            }),
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 1,
+              'title': 'Test title',
+              'content': 'Test content',
+              'createdAt': '2025-01-14 10:01:17',
+            }),
+            200,
+          ),
+        );
+
+        final news = await client.createNews(
+          appId: 1,
+          title: 'Test title',
+          content: 'Test content',
+        );
+
+        expect(news.id, equals(1));
+        expect(news.title, equals('Test title'));
+        expect(news.content, equals('Test content'));
+        expect(news.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17, 0)));
+      });
+
+      test('update news', () async {
+        when(
+          () => httpClient.put(
+            Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'title': 'Test title',
+              'content': 'Test content',
+            }),
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            json.encode({
+              'id': 1,
+              'title': 'Test title',
+              'content': 'Test content',
+              'createdAt': '2025-01-14 10:01:17',
+            }),
+            200,
+          ),
+        );
+
+        final news = await client.updateNews(
+          appId: 1,
+          newsId: 1,
+          title: 'Test title',
+          content: 'Test content',
+        );
+
+        expect(news.id, equals(1));
+        expect(news.title, equals('Test title'));
+        expect(news.content, equals('Test content'));
+        expect(news.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17, 0)));
       });
     });
 
