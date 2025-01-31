@@ -1,3 +1,5 @@
+import 'package:dart_stork_admin_client/src/extensions/date.dart';
+
 /// {@template stork_app_version}
 /// A model representing a version of an app.
 /// {@endtemplate}
@@ -13,31 +15,14 @@ class StorkAppVersion {
 
   /// Creates a [StorkAppVersion] from a json map.
   factory StorkAppVersion.fromJson(Map<String, dynamic> json) {
-    DateTime createdAt;
-    try {
-      final createdAtStr = json['createdAt'] as String;
-      final parts = createdAtStr.split(' ');
-      final dateParts = parts[0].split('-');
-      final timeParts = parts[1].split(':');
-
-      createdAt = DateTime(
-        int.parse(dateParts[0]), // year
-        int.parse(dateParts[1]), // month
-        int.parse(dateParts[2]), // day
-        int.parse(timeParts[0]), // hour
-        int.parse(timeParts[1]), // minute
-        int.parse(timeParts[2]), // second
-      );
-    } catch (_) {
-      createdAt = DateTime.fromMillisecondsSinceEpoch(0);
-    }
+    final createdAtStr = json['createdAt'] as String;
 
     return StorkAppVersion(
       id: json['id'] as int,
       appId: json['appId'] as int,
       version: json['version'] as String,
       changelog: json['changelog'] as String,
-      createdAt: createdAt,
+      createdAt: DateExtension.deserialize(createdAtStr),
     );
   }
 
@@ -63,12 +48,7 @@ class StorkAppVersion {
       'appId': appId,
       'version': version,
       'changelog': changelog,
-      'createdAt': '${createdAt.year.toString().padLeft(4, '0')}-'
-          '${createdAt.month.toString().padLeft(2, '0')}-'
-          '${createdAt.day.toString().padLeft(2, '0')} '
-          '${createdAt.hour.toString().padLeft(2, '0')}:'
-          '${createdAt.minute.toString().padLeft(2, '0')}:'
-          '${createdAt.second.toString().padLeft(2, '0')}',
+      'createdAt': createdAt.serialize(),
     };
   }
 

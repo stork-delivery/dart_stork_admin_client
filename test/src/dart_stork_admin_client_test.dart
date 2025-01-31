@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 import 'dart:convert';
 
 import 'package:dart_stork_admin_client/dart_stork_admin_client.dart';
@@ -395,14 +395,14 @@ void main() {
                 'appId': 1,
                 'version': '1.0.0',
                 'changelog': 'Initial release',
-                'createdAt': '2025-01-14 10:01:17',
+                'createdAt': '2025-01-14T10:01:17.000Z',
               },
               {
                 'id': 2,
                 'appId': 1,
                 'version': '1.0.1',
                 'changelog': 'Bug fixes',
-                'createdAt': '2025-01-14 10:01:17',
+                'createdAt': '2025-01-14T10:01:17.000Z',
               },
             ]),
             200,
@@ -415,11 +415,17 @@ void main() {
         expect(versions[0].id, equals(1));
         expect(versions[0].version, equals('1.0.0'));
         expect(versions[0].changelog, equals('Initial release'));
-        expect(versions[0].createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
+        expect(
+          versions[0].createdAt,
+          equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+        );
         expect(versions[1].id, equals(2));
         expect(versions[1].version, equals('1.0.1'));
         expect(versions[1].changelog, equals('Bug fixes'));
-        expect(versions[1].createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
+        expect(
+          versions[1].createdAt,
+          equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+        );
       });
 
       test('throws exception on error response', () async {
@@ -479,7 +485,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
-              'createdAt': '2025-01-14 10:01:17',
+              'createdAt': '2025-01-14T10:01:17.000Z',
             }),
             200,
           ),
@@ -508,7 +514,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
-              'createdAt': '2025-01-14 10:01:17',
+              'createdAt': '2025-01-14T10:01:17.000Z',
             }),
             200,
           ),
@@ -520,7 +526,10 @@ void main() {
         expect(version.appId, equals(1));
         expect(version.version, equals('1.0.0'));
         expect(version.changelog, equals('Initial release'));
-        expect(version.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
+        expect(
+          version.createdAt,
+          equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+        );
       });
 
       test('throws exception on error response', () async {
@@ -558,7 +567,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
-              'createdAt': '2025-01-14 10:01:17',
+              'createdAt': '2025-01-14T10:01:17.000Z',
             }),
             200,
           ),
@@ -899,6 +908,245 @@ void main() {
           ),
           throwsA(isA<Exception>()),
         );
+      });
+    });
+
+    group('news', () {
+      group('list news', () {
+        test('returns the list of news', () async {
+          when(
+            () => httpClient.get(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news?page=1&perPage=10'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+              },
+            ),
+          ).thenAnswer(
+            (_) async => http.Response(
+              json.encode([
+                {
+                  'id': 1,
+                  'title': 'Test title',
+                  'content': 'Test content',
+                  'createdAt': '2025-01-14T10:01:17.000Z',
+                },
+              ]),
+              200,
+            ),
+          );
+
+          final news = await client.listNews(appId: 1, page: 1, perPage: 10);
+
+          expect(news[0].id, equals(1));
+          expect(news[0].title, equals('Test title'));
+          expect(news[0].content, equals('Test content'));
+          expect(
+            news[0].createdAt,
+            equals(
+              DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal(),
+            ),
+          );
+        });
+
+        test('throws on non 200 response', () async {
+          when(
+            () => httpClient.get(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news?page=1&perPage=10'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+              },
+            ),
+          ).thenAnswer((_) async => http.Response('', 500));
+
+          expect(
+            () => client.listNews(appId: 1, page: 1, perPage: 10),
+            throwsA(isA<Exception>()),
+          );
+        });
+      });
+
+      group('get news', () {
+        test('return the news', () async {
+          when(
+            () => httpClient.get(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+              },
+            ),
+          ).thenAnswer(
+            (_) async => http.Response(
+              json.encode({
+                'id': 1,
+                'title': 'Test title',
+                'content': 'Test content',
+                'createdAt': '2025-01-14T10:01:17.000Z',
+              }),
+              200,
+            ),
+          );
+
+          final news = await client.getNews(appId: 1, newsId: 1);
+
+          expect(news.id, equals(1));
+          expect(news.title, equals('Test title'));
+          expect(news.content, equals('Test content'));
+          expect(
+            news.createdAt,
+            equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+          );
+        });
+        test('throws on non 200 response', () async {
+          when(
+            () => httpClient.get(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+              },
+            ),
+          ).thenAnswer((_) async => http.Response('', 500));
+
+          expect(
+            () => client.getNews(appId: 1, newsId: 1),
+            throwsA(isA<Exception>()),
+          );
+        });
+      });
+
+      group('create news', () {
+        test('returns successfully created news', () async {
+          when(
+            () => httpClient.post(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+                'Content-Type': 'application/json',
+              },
+              body: json.encode({
+                'title': 'Test title',
+                'content': 'Test content',
+              }),
+            ),
+          ).thenAnswer(
+            (_) async => http.Response(
+              json.encode({
+                'id': 1,
+                'title': 'Test title',
+                'content': 'Test content',
+                'createdAt': '2025-01-14T10:01:17.000Z',
+              }),
+              200,
+            ),
+          );
+
+          final news = await client.createNews(
+            appId: 1,
+            title: 'Test title',
+            content: 'Test content',
+          );
+
+          expect(news.id, equals(1));
+          expect(news.title, equals('Test title'));
+          expect(news.content, equals('Test content'));
+          expect(
+            news.createdAt,
+            equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+          );
+        });
+
+        test('throws on non 200 response', () async {
+          when(
+            () => httpClient.post(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+                'Content-Type': 'application/json',
+              },
+              body: json.encode({
+                'title': 'Test title',
+                'content': 'Test content',
+              }),
+            ),
+          ).thenAnswer((_) async => http.Response('', 500));
+
+          expect(
+            () => client.createNews(
+              appId: 1,
+              title: 'Test title',
+              content: 'Test content',
+            ),
+            throwsA(isA<Exception>()),
+          );
+        });
+      });
+
+      group('update news', () {
+        test('return the updated news', () async {
+          when(
+            () => httpClient.patch(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+                'Content-Type': 'application/json',
+              },
+              body: json.encode({
+                'title': 'Test title',
+                'content': 'Test content',
+              }),
+            ),
+          ).thenAnswer(
+            (_) async => http.Response(
+              json.encode({
+                'id': 1,
+                'title': 'Test title',
+                'content': 'Test content',
+                'createdAt': '2025-01-14T10:01:17.000Z',
+              }),
+              200,
+            ),
+          );
+
+          final news = await client.updateNews(
+            appId: 1,
+            newsId: 1,
+            title: 'Test title',
+            content: 'Test content',
+          );
+
+          expect(news.id, equals(1));
+          expect(news.title, equals('Test title'));
+          expect(news.content, equals('Test content'));
+          expect(
+            news.createdAt,
+            equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+          );
+        });
+
+        test('throws on non 200 response', () async {
+          when(
+            () => httpClient.patch(
+              Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+                'Content-Type': 'application/json',
+              },
+              body: json.encode({
+                'title': 'Test title',
+                'content': 'Test content',
+              }),
+            ),
+          ).thenAnswer((_) async => http.Response('', 500));
+
+          expect(
+            () => client.updateNews(
+              appId: 1,
+              newsId: 1,
+              title: 'Test title',
+              content: 'Test content',
+            ),
+            throwsA(isA<Exception>()),
+          );
+        });
       });
     });
 
