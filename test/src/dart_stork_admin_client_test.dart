@@ -395,14 +395,14 @@ void main() {
                 'appId': 1,
                 'version': '1.0.0',
                 'changelog': 'Initial release',
-                'createdAt': '2025-01-14 10:01:17',
+                'createdAt': '2025-01-14T10:01:17.000Z',
               },
               {
                 'id': 2,
                 'appId': 1,
                 'version': '1.0.1',
                 'changelog': 'Bug fixes',
-                'createdAt': '2025-01-14 10:01:17',
+                'createdAt': '2025-01-14T10:01:17.000Z',
               },
             ]),
             200,
@@ -415,11 +415,17 @@ void main() {
         expect(versions[0].id, equals(1));
         expect(versions[0].version, equals('1.0.0'));
         expect(versions[0].changelog, equals('Initial release'));
-        expect(versions[0].createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
+        expect(
+          versions[0].createdAt,
+          equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+        );
         expect(versions[1].id, equals(2));
         expect(versions[1].version, equals('1.0.1'));
         expect(versions[1].changelog, equals('Bug fixes'));
-        expect(versions[1].createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
+        expect(
+          versions[1].createdAt,
+          equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+        );
       });
 
       test('throws exception on error response', () async {
@@ -479,7 +485,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
-              'createdAt': '2025-01-14 10:01:17',
+              'createdAt': '2025-01-14T10:01:17.000Z',
             }),
             200,
           ),
@@ -508,7 +514,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
-              'createdAt': '2025-01-14 10:01:17',
+              'createdAt': '2025-01-14T10:01:17.000Z',
             }),
             200,
           ),
@@ -520,7 +526,10 @@ void main() {
         expect(version.appId, equals(1));
         expect(version.version, equals('1.0.0'));
         expect(version.changelog, equals('Initial release'));
-        expect(version.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17)));
+        expect(
+          version.createdAt,
+          equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+        );
       });
 
       test('throws exception on error response', () async {
@@ -558,7 +567,7 @@ void main() {
               'appId': 1,
               'version': '1.0.0',
               'changelog': 'Initial release',
-              'createdAt': '2025-01-14 10:01:17',
+              'createdAt': '2025-01-14T10:01:17.000Z',
             }),
             200,
           ),
@@ -919,7 +928,7 @@ void main() {
                   'id': 1,
                   'title': 'Test title',
                   'content': 'Test content',
-                  'createdAt': '2025-01-14 10:01:17',
+                  'createdAt': '2025-01-14T10:01:17.000Z',
                 },
               ]),
               200,
@@ -934,7 +943,7 @@ void main() {
           expect(
             news[0].createdAt,
             equals(
-              DateTime(2025, 1, 14, 10, 1, 17, 0),
+              DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal(),
             ),
           );
         });
@@ -971,7 +980,7 @@ void main() {
                 'id': 1,
                 'title': 'Test title',
                 'content': 'Test content',
-                'createdAt': '2025-01-14 10:01:17',
+                'createdAt': '2025-01-14T10:01:17.000Z',
               }),
               200,
             ),
@@ -982,7 +991,10 @@ void main() {
           expect(news.id, equals(1));
           expect(news.title, equals('Test title'));
           expect(news.content, equals('Test content'));
-          expect(news.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17, 0)));
+          expect(
+            news.createdAt,
+            equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+          );
         });
         test('throws on non 200 response', () async {
           when(
@@ -1021,7 +1033,7 @@ void main() {
                 'id': 1,
                 'title': 'Test title',
                 'content': 'Test content',
-                'createdAt': '2025-01-14 10:01:17',
+                'createdAt': '2025-01-14T10:01:17.000Z',
               }),
               200,
             ),
@@ -1036,7 +1048,10 @@ void main() {
           expect(news.id, equals(1));
           expect(news.title, equals('Test title'));
           expect(news.content, equals('Test content'));
-          expect(news.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17, 0)));
+          expect(
+            news.createdAt,
+            equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+          );
         });
 
         test('throws on non 200 response', () async {
@@ -1085,7 +1100,7 @@ void main() {
                 'id': 1,
                 'title': 'Test title',
                 'content': 'Test content',
-                'createdAt': '2025-01-14 10:01:17',
+                'createdAt': '2025-01-14T10:01:17.000Z',
               }),
               200,
             ),
@@ -1101,7 +1116,10 @@ void main() {
           expect(news.id, equals(1));
           expect(news.title, equals('Test title'));
           expect(news.content, equals('Test content'));
-          expect(news.createdAt, equals(DateTime(2025, 1, 14, 10, 1, 17, 0)));
+          expect(
+            news.createdAt,
+            equals(DateTime.utc(2025, 1, 14, 10, 1, 17).toLocal()),
+          );
         });
 
         test('throws on non 200 response', () async {

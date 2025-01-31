@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('StorkAppVersion', () {
-    final testDateTime = DateTime(2025, 1, 14, 9, 57, 47);
+    final testDateTime = DateTime.utc(2025, 1, 14, 9, 57, 47);
 
     test('can be instantiated', () {
       final version = StorkAppVersion(
@@ -29,7 +29,7 @@ void main() {
         'appId': 2,
         'version': '1.0.0',
         'changelog': 'Initial release',
-        'createdAt': '2025-01-14 09:57:47',
+        'createdAt': '2025-01-14T09:57:47.000Z',
       };
 
       final version = StorkAppVersion.fromJson(json);
@@ -38,7 +38,10 @@ void main() {
       expect(version.appId, equals(2));
       expect(version.version, equals('1.0.0'));
       expect(version.changelog, equals('Initial release'));
-      expect(version.createdAt, equals(testDateTime));
+      expect(
+        version.createdAt,
+        equals(DateTime.utc(2025, 1, 14, 9, 57, 47).toLocal()),
+      );
     });
 
     test('fromJson returns epoch time when date parsing fails', () {
@@ -79,7 +82,7 @@ void main() {
             'appId': 2,
             'version': '1.0.0',
             'changelog': 'Initial release',
-            'createdAt': '2025-01-14 09:57:47',
+            'createdAt': '2025-01-14T09:57:47.000Z',
           },
         ),
       );
@@ -94,7 +97,7 @@ void main() {
         createdAt: testDateTime,
       );
 
-      final newDateTime = DateTime(2025, 1, 14, 10, 0, 0);
+      final newDateTime = DateTime.utc(2025, 1, 14, 10, 0, 0);
       final updatedVersion = version.copyWith(
         version: '1.0.1',
         changelog: 'Bug fixes',

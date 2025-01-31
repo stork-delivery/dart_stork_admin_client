@@ -11,7 +11,7 @@ void main() {
           id: 1,
           title: 'test',
           content: 'test',
-          createdAt: DateTime(2024),
+          createdAt: DateTime.utc(2024),
         ),
         isNotNull,
       );
@@ -22,12 +22,12 @@ void main() {
         'id': 1,
         'title': 'test',
         'content': 'test',
-        'createdAt': '2024-01-01 00:00:00',
+        'createdAt': '2024-01-01T00:00:00.000Z',
       });
       expect(news.id, equals(1));
       expect(news.title, equals('test'));
       expect(news.content, equals('test'));
-      expect(news.createdAt, equals(DateTime(2024, 1, 1, 0, 0)));
+      expect(news.createdAt, equals(DateTime.utc(2024).toLocal()));
     });
 
     test('can serialize to json', () {
@@ -35,13 +35,13 @@ void main() {
         id: 1,
         title: 'test',
         content: 'test',
-        createdAt: DateTime(2024, 1, 1, 0, 0),
+        createdAt: DateTime.utc(2024),
       );
       expect(news.toJson(), {
         'id': 1,
         'title': 'test',
         'content': 'test',
-        'createdAt': '2024-01-01 00:00:00',
+        'createdAt': '2024-01-01T00:00:00.000Z',
       });
     });
   });
