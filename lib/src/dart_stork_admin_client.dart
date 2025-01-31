@@ -322,7 +322,7 @@ class DartStorkAdminClient {
     required String title,
     required String content,
   }) async {
-    final response = await _client.put(
+    final response = await _client.patch(
       Uri.parse('$_baseUrl/v1/admin/apps/$appId/news/$newsId'),
       headers: {
         ..._headers,

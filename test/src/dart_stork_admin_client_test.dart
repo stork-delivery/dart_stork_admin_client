@@ -1068,7 +1068,7 @@ void main() {
       group('update news', () {
         test('return the updated news', () async {
           when(
-            () => httpClient.put(
+            () => httpClient.patch(
               Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
               headers: {
                 'Authorization': 'Bearer $apiKey',
@@ -1106,7 +1106,7 @@ void main() {
 
         test('throws on non 200 response', () async {
           when(
-            () => httpClient.put(
+            () => httpClient.patch(
               Uri.parse('$baseUrl/v1/admin/apps/1/news/1'),
               headers: {
                 'Authorization': 'Bearer $apiKey',
