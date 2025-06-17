@@ -198,6 +198,24 @@ class DartStorkAdminClient {
     return response.bodyBytes;
   }
 
+  /// Deletes a single artifact for a specific version and platform.
+  Future<void> deleteArtifact(
+    int appId,
+    String versionName,
+    String platform,
+  ) async {
+    final response = await _client.delete(
+      Uri.parse(
+        '$_baseUrl/v1/admin/apps/$appId/versions/$versionName/artifacts/platforms/$platform',
+      ),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete artifact: ${response.statusCode}');
+    }
+  }
+
   /// Gets the Itch.io integration data for a specific app.
   Future<StorkItchIOData?> getItchIOData(int appId) async {
     final response = await _client.get(
