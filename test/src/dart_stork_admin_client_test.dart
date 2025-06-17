@@ -785,6 +785,80 @@ void main() {
       });
     });
 
+    group('deleteArtifact', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.delete(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('', 204),
+        );
+
+        await client.deleteArtifact(1, '1.0.0', 'android');
+
+        verify(
+          () => httpClient.delete(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+
+      test('throws exception on non-204 response', () async {
+        when(
+          () => httpClient.delete(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('Not Found', 404),
+        );
+
+        expect(
+          () => client.deleteArtifact(1, '1.0.0', 'android'),
+          throwsA(isA<Exception>()),
+        );
+      });
+
+      test('uses custom base url when provided', () async {
+        final customClient = DartStorkAdminClient(
+          baseUrl: 'https://custom.url',
+          client: httpClient,
+          apiKey: apiKey,
+        );
+
+        when(
+          () => httpClient.delete(
+            Uri.parse(
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer(
+          (_) async => http.Response('', 204),
+        );
+
+        await customClient.deleteArtifact(1, '1.0.0', 'android');
+
+        verify(
+          () => httpClient.delete(
+            Uri.parse(
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+    });
+
     group('getItchIOData', () {
       test('makes correct http request', () async {
         when(
