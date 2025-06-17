@@ -155,6 +155,18 @@ class DartStorkAdminClient {
     );
   }
 
+  /// Deletes a specific version of an app.
+  Future<void> deleteVersion(int appId, String versionName) async {
+    final response = await _client.delete(
+      Uri.parse('$_baseUrl/v1/admin/apps/$appId/versions/$versionName'),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete version: ${response.statusCode}');
+    }
+  }
+
   /// Lists all artifacts for a specific version.
   Future<List<StorkAppVersionArtifact>> listArtifacts(
     int appId,
