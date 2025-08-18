@@ -648,6 +648,74 @@ void main() {
       });
     });
 
+    group('publishArtifactToItchIO', () {
+      test('makes correct http request', () async {
+        when(
+          () => httpClient.post(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/itchio',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer((_) async => http.Response('', 200));
+
+        await client.publishArtifactToItchIO(1, '1.0.0', 'android');
+
+        verify(
+          () => httpClient.post(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/itchio',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+
+      test('throws exception on non-200 response', () async {
+        when(
+          () => httpClient.post(
+            Uri.parse(
+              '$baseUrl/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/itchio',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer((_) async => http.Response('', 500));
+
+        expect(
+          () => client.publishArtifactToItchIO(1, '1.0.0', 'android'),
+          throwsA(isA<Exception>()),
+        );
+      });
+
+      test('uses custom base url when provided', () async {
+        final customClient = DartStorkAdminClient(
+          baseUrl: 'https://custom.url',
+          client: httpClient,
+          apiKey: apiKey,
+        );
+
+        when(
+          () => httpClient.post(
+            Uri.parse(
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/itchio',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).thenAnswer((_) async => http.Response('', 200));
+
+        await customClient.publishArtifactToItchIO(1, '1.0.0', 'android');
+
+        verify(
+          () => httpClient.post(
+            Uri.parse(
+              'https://custom.url/v1/admin/apps/1/versions/1.0.0/artifacts/platforms/android/itchio',
+            ),
+            headers: {'Authorization': 'Bearer $apiKey'},
+          ),
+        ).called(1);
+      });
+    });
+
     group('listArtifacts', () {
       test('makes correct http request', () async {
         when(

@@ -228,6 +228,24 @@ class DartStorkAdminClient {
     }
   }
 
+  /// Sends the artifact to ItchIO
+  Future<void> publishArtifactToItchIO(
+    int appId,
+    String versionName,
+    String platform,
+  ) async {
+    final response = await _client.post(
+      Uri.parse(
+        '$_baseUrl/v1/admin/apps/$appId/versions/$versionName/artifacts/platforms/$platform/itchio',
+      ),
+      headers: _headers,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to download artifact: ${response.statusCode}');
+    }
+  }
+
   /// Gets the Itch.io integration data for a specific app.
   Future<StorkItchIOData?> getItchIOData(int appId) async {
     final response = await _client.get(
